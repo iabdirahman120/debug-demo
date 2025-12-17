@@ -14,7 +14,7 @@ public class Player {
 
     public void takeTurn(int turn) {
         Point attackPoint = getAttackPoint();
-        System.out.printf("Turn %s: %s,%s", turn + 1, attackPoint.x, attackPoint.y);
+        System.out.printf("Turn %d: %d,%d", turn + 1, attackPoint.x, attackPoint.y);
 
         if (board.attack(attackPoint)) {
             System.out.print(" direct hit!");
@@ -32,10 +32,11 @@ public class Player {
     }
 
     private Point randomGridPoint() {
-        return new Point(randomInteger(board.getGridSize() - 1), randomInteger(board.getGridSize() - 1));
+        return new Point(randomInteger(board.getGridSize() - 1),
+                randomInteger(board.getGridSize() - 1));
     }
 
     private static int randomInteger(int maxValue) {
-        return new Random().nextInt(maxValue);
+        return new Random().nextInt(maxValue + 1);
     }
 }
