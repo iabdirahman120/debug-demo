@@ -22,7 +22,7 @@ public class Board {
     }
 
     public boolean isSunk() {
-        return hitCount > BATTLESHIP_LENGTH;
+        return hitCount >= BATTLESHIP_LENGTH;
     }
 
     public void reveal() {
@@ -30,11 +30,7 @@ public class Board {
         StringBuilder gridVisualisation = new StringBuilder();
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
-                if (grid[x][y]) {
-                    gridVisualisation.append("x ");
-                } else {
-                    gridVisualisation.append("o ");
-                }
+                gridVisualisation.append(grid[x][y] ? "x " : "o ");
             }
             gridVisualisation.append(System.lineSeparator());
         }
@@ -46,25 +42,33 @@ public class Board {
     }
 
     private void addBattleship() {
-        Point startPoint = randomGridPoint();
-        Point endPoint = calculateEndPoint(startPoint);
+        boolean placed = false;
 
-        for (int x = startPoint.x; x < endPoint.x + 1; x++) {
-            for (int y = startPoint.y; y < endPoint.y + 1; y++) {
-                grid[x][y] = true;
+        while (!placed) {
+            Point startPoint = randomGridPoint();
+            Point endPoint = calculateEndPoint(startPoint);
+
+            if (endPoint.x < grid.length && endPoint.y < grid.length) {
+                for (int x = startPoint.x; x <= endPoint.x; x++) {
+                    for (int y = startPoint.y; y <= endPoint.y; y++) {
+                        grid[x][y] = true;
+                    }
+                }
+                placed = true;
             }
         }
     }
 
     private Point randomGridPoint() {
-        return new Point(getRandomInteger(grid.length - 1), getRandomInteger(grid.length - 1));
+        return new Point(getRandomInteger(grid.length - 1),
+                getRandomInteger(grid.length - 1));
     }
 
     private Point calculateEndPoint(Point startPoint) {
         return switch (getRandomInteger(1)) {
             case 0 -> getHorizontalEndPoint(startPoint);
             case 1 -> getVerticalEndPoint(startPoint);
-            default -> throw new IllegalStateException("Unexpected value.");
+            default -> throw new IllegalStateException("Unexpected value");
         };
     }
 
@@ -77,6 +81,6 @@ public class Board {
     }
 
     private static int getRandomInteger(int maxValue) {
-        return new Random().nextInt(maxValue);
+        return new Random().nextInt(maxValue + 1);
     }
 }
